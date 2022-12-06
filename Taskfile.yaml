@@ -1,0 +1,27 @@
+---
+version: "3"
+
+tasks:
+  build-todo-grpc-talk:
+    desc: "Build todo-grpc-talk binary for release"
+    deps:
+      - task: template/go-build-binary
+        vars:
+          CMD_NAME: "todo-grpc-talk"
+
+  lint:
+    desc: "lint the project"
+    cmds:
+      - golangci-lint -v run
+
+  # templates
+  template/go-build-binary:
+    env:
+      CGO_ENABLED: 0
+    vars:
+      VERSION:
+        sh: git describe --tags --always --dirty --match=v* 2> /dev/null || cat $(CURDIR)/.version 2> /dev/null || echo v0
+      BUILD_DATE:
+        sh: date +%Y%m%d%H%M%S
+    cmds:
+      - go build -ldflags '-X main.Version={{.VERSION}} -X main.BuildDate={{ .BUILD_DATE }}' -o ./build/{{.CMD_NAME}} ./cmd/{{.CMD_NAME}}
