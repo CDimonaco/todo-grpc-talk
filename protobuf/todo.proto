@@ -6,9 +6,9 @@ package dev.cdimonaco.todogrpc;
 option go_package = "github.com/CDimonaco/todo-grpc-talk/internal/proto/stubs";
 
 message Todo {
-    string id = 1;
-    string title = 2;
-    string description = 3;
-    string created_at = 4;
-    bool completed = 5;
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string created_at = 4;
+  bool completed = 5;
 }

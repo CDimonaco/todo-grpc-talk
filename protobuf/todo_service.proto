@@ -8,30 +8,32 @@ option go_package = "github.com/CDimonaco/todo-grpc-talk/internal/proto/grpc";
 import "todo.proto";
 
 message AddTodoRequest {
-    string title = 1;
-    string description = 2;
+  string title = 1;
+  string description = 2;
 }
 
 message AddTodoResponse {
-    Todo result = 1;
+  Todo result = 1;
 }
 
 message GetTodoRequest {
-    string id = 1;
+  string id = 1;
 }
 
 message GetTodoResponse {
-    Todo result = 1;
+  Todo result = 1;
 }
 
-message ListTodoRequest {}
+message ListTodoRequest {
+
+}
 
 message ListTodosResponse {
-    repeated Todo todos = 1;
+  repeated Todo todos = 1;
 }
 
 service  TodoService {
-    rpc AddTodo(AddTodoRequest) returns (AddTodoResponse);
-    rpc GetTodo(GetTodoRequest) returns (GetTodoResponse);
-    rpc ListTodos(ListTodoRequest) returns (ListTodosResponse);
+  rpc AddTodo(AddTodoRequest) returns (AddTodoResponse);
+  rpc GetTodo(GetTodoRequest) returns (GetTodoResponse);
+  rpc ListTodos(ListTodoRequest) returns (ListTodosResponse);
 }
