@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
 	"go.uber.org/zap"
 )
 
 type Creator interface {
-	CreateTodo(ctx context.Context, name, description string) (*Todo, error)
+	CreateTodo(ctx context.Context, id, name, description string) (*Todo, error)
 }
 
 type AddTodo struct {
@@ -36,7 +37,9 @@ func (c *AddTodo) Execute(ctx context.Context, name, description string) (*Todo,
 		return nil, fmt.Errorf("could not create new todo, missing description")
 	}
 
-	todo, err := c.creator.CreateTodo(ctx, name, description)
+	newTodoId := uuid.NewString()
+
+	todo, err := c.creator.CreateTodo(ctx, newTodoId, name, description)
 	if err != nil {
 		c.logger.Errorw("error during todo creation", "error", err)
 

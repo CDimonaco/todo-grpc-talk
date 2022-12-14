@@ -36,7 +36,7 @@ func TestAddTodoSuccess(t *testing.T) {
 		CreatedAt:   cat,
 		Completed:   false,
 	}
-	creator.On("CreateTodo", mock.AnythingOfType("*context.emptyCtx"), "name", "desc").Return(
+	creator.On("CreateTodo", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("string"), "name", "desc").Return(
 		expectedTodo,
 		nil,
 	).Times(1)
@@ -71,7 +71,7 @@ func TestAddTodoErrorMissingDescription(t *testing.T) {
 func TestAddTodoErrorDuringCreation(t *testing.T) {
 	creator := mocks.NewCreator(t)
 	expectedErr := fmt.Errorf("the reason is you")
-	creator.On("CreateTodo", mock.AnythingOfType("*context.emptyCtx"), "name", "desc").Return(
+	creator.On("CreateTodo", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("string"), "name", "desc").Return(
 		nil,
 		expectedErr,
 	).Times(1)

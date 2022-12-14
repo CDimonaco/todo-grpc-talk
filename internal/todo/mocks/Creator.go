@@ -14,13 +14,13 @@ type Creator struct {
 	mock.Mock
 }
 
-// CreateTodo provides a mock function with given fields: ctx, name, description
-func (_m *Creator) CreateTodo(ctx context.Context, name string, description string) (*todo.Todo, error) {
-	ret := _m.Called(ctx, name, description)
+// CreateTodo provides a mock function with given fields: ctx, id, name, description
+func (_m *Creator) CreateTodo(ctx context.Context, id string, name string, description string) (*todo.Todo, error) {
+	ret := _m.Called(ctx, id, name, description)
 
 	var r0 *todo.Todo
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) *todo.Todo); ok {
-		r0 = rf(ctx, name, description)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) *todo.Todo); ok {
+		r0 = rf(ctx, id, name, description)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*todo.Todo)
@@ -28,8 +28,8 @@ func (_m *Creator) CreateTodo(ctx context.Context, name string, description stri
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
-		r1 = rf(ctx, name, description)
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, string) error); ok {
+		r1 = rf(ctx, id, name, description)
 	} else {
 		r1 = ret.Error(1)
 	}
