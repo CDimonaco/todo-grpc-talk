@@ -3,4 +3,5 @@ task 3.19.0
 protoc 3.20.1
 protoc-gen-go 1.28.1
 protolint 0.42.2
-protoc-gen-go-grpc 1.2.0
+protoc-gen-go-grpc 1.2.0mockery 2.15.0
+mockery 2.15.0

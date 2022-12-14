@@ -37,7 +37,7 @@ func (g *GetTodo) Execute(ctx context.Context, id string) (*Todo, error) {
 
 	_, err := uuid.Parse(id)
 	if err != nil {
-		return nil, fmt.Errorf("the provided is %s is not an uuid", id)
+		return nil, fmt.Errorf("the provided id %s is not an uuid", id)
 	}
 
 	t, err := g.getter.GetTodoByID(ctx, id)

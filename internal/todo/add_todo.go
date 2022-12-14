@@ -1,6 +1,7 @@
 package todo
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/pkg/errors"
@@ -9,7 +10,7 @@ import (
 )
 
 type Creator interface {
-	CreateTodo(name, description string) (*Todo, error)
+	CreateTodo(ctx context.Context, name, description string) (*Todo, error)
 }
 
 type AddTodo struct {
@@ -26,7 +27,7 @@ func NewAddTodo(creator Creator, logger *zap.SugaredLogger) *AddTodo {
 	}
 }
 
-func (c *AddTodo) Execute(name, description string) (*Todo, error) {
+func (c *AddTodo) Execute(ctx context.Context, name, description string) (*Todo, error) {
 	if name == "" {
 		return nil, fmt.Errorf("could not create new todo, missing name")
 	}
@@ -35,7 +36,7 @@ func (c *AddTodo) Execute(name, description string) (*Todo, error) {
 		return nil, fmt.Errorf("could not create new todo, missing description")
 	}
 
-	todo, err := c.creator.CreateTodo(name, description)
+	todo, err := c.creator.CreateTodo(ctx, name, description)
 	if err != nil {
 		c.logger.Errorw("error during todo creation", "error", err)
 
