@@ -37,14 +37,20 @@ jobs:
       
 
       - name: Download Linux binary server
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: todo-grpc-talk-linux-server
-      
+          path: ${{ github.workspace }}
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ${{ github.workspace }}
+
       - name: Download Linux binary client
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: todo-grpc-talk-linux-client
+          path: ${{ github.workspace }}
 
       - name: Attach Linux binary server to GitHub release
         uses: actions/upload-release-asset@v1.0.1
@@ -52,9 +58,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ github.workspace }}/todo-grpc-talk-linux/todo-grpc-talk-server
+          asset_path: ${{ github.workspace }}/todo-grpc-talk-server
           asset_name: todo-grpc-talk-linux-server
-          asset_label: Linux binary
           asset_content_type: application/binary
       
       - name: Attach Linux binary client to GitHub release
@@ -63,7 +68,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ github.workspace }}/todo-grpc-talk-linux/todo-grpc-talk-client
+          asset_path: ${{ github.workspace }}/todo-grpc-talk-client
           asset_name: todo-grpc-talk-linux-client
-          asset_label: Linux binary
           asset_content_type: application/binary
