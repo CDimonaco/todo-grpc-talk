@@ -15,18 +15,18 @@ import (
 type GrpcHandler struct {
 	grpc.UnimplementedTodoServiceServer
 	logger     *zap.SugaredLogger
-	addTodo    todo.AddTodo
-	getTodo    todo.GetTodo
-	getAllTodo todo.GetAllTodo
+	addTodo    *todo.AddTodo
+	getTodo    *todo.GetTodo
+	getAllTodo *todo.GetAllTodo
 }
 
 var _ grpc.TodoServiceServer = (*GrpcHandler)(nil)
 
 func NewGrpcHandler(
 	logger *zap.SugaredLogger,
-	addTodo todo.AddTodo,
-	getTodo todo.GetTodo,
-	getAllTodo todo.GetAllTodo,
+	addTodo *todo.AddTodo,
+	getTodo *todo.GetTodo,
+	getAllTodo *todo.GetAllTodo,
 ) *GrpcHandler {
 	l := logger.With("component", "grpcHandler")
 
@@ -48,13 +48,7 @@ func (h *GrpcHandler) AddTodo(ctx context.Context, req *grpc.AddTodoRequest) (*g
 	}
 
 	return &grpc.AddTodoResponse{
-		Result: &stubs.Todo{
-			Id:          newTodo.ID,
-			Title:       newTodo.Title,
-			Description: newTodo.Description,
-			CreatedAt:   newTodo.CreatedAt.Format(time.RFC3339),
-			Completed:   newTodo.Completed,
-		},
+		Result: mapTodoEntityToProtoTodo(newTodo),
 	}, nil
 }
 
@@ -66,12 +60,34 @@ func (h *GrpcHandler) GetTodo(ctx context.Context, in *grpc.GetTodoRequest) (*gr
 	}
 
 	return &grpc.GetTodoResponse{
-		Result: &stubs.Todo{
-			Id:          t.ID,
-			Title:       t.Title,
-			Description: t.Description,
-			CreatedAt:   t.CreatedAt.Format(time.RFC3339),
-			Completed:   t.Completed,
-		},
+		Result: mapTodoEntityToProtoTodo(t),
 	}, nil
+}
+
+func (h *GrpcHandler) ListTodos(ctx context.Context, req *grpc.ListTodoRequest) (*grpc.ListTodosResponse, error) {
+	todos, err := h.getAllTodo.Execute(ctx)
+	if err != nil {
+		h.logger.Error("error during todo get all", "err", err)
+		return nil, status.Errorf(codes.Internal, "error during todo get all %s", err)
+	}
+	var todosResponse []*stubs.Todo
+
+	for _, t := range todos {
+		todoStub := mapTodoEntityToProtoTodo(&t)
+		todosResponse = append(todosResponse, todoStub)
+	}
+
+	return &grpc.ListTodosResponse{
+		Todos: todosResponse,
+	}, nil
+}
+
+func mapTodoEntityToProtoTodo(entity *todo.Todo) *stubs.Todo {
+	return &stubs.Todo{
+		Id:          entity.ID,
+		Title:       entity.Title,
+		Description: entity.Description,
+		CreatedAt:   entity.CreatedAt.Format(time.RFC3339),
+		Completed:   entity.Completed,
+	}
 }
