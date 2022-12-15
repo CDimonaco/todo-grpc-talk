@@ -1,0 +1,69 @@
+---
+name: Github release flow
+on:
+  release:
+    types:
+      - created
+jobs:
+  release-build-attach:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Golang setup
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.19.3'
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - name: Build linux binary server
+        run: task build-todo-grpc-talk-server
+      - name: Build linux binary client
+        run: task build-todo-grpc-talk-client
+      - name: Store Linux binary server
+        uses: actions/upload-artifact@v1
+        with:
+          name: todo-grpc-talk-linux-server
+          path: ${{ github.workspace }}/build/todo-grpc-talk-server
+      
+      - name: Store Linux binary client
+        uses: actions/upload-artifact@v1
+        with:
+          name: todo-grpc-talk-linux-client
+          path: ${{ github.workspace }}/build/todo-grpc-talk-client
+      
+
+      - name: Download Linux binary server
+        uses: actions/download-artifact@v1
+        with:
+          name: todo-grpc-talk-linux-server
+      
+      - name: Download Linux binary client
+        uses: actions/download-artifact@v1
+        with:
+          name: todo-grpc-talk-linux-client
+
+      - name: Attach Linux binary server to GitHub release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/todo-grpc-talk-linux/todo-grpc-talk-server
+          asset_name: todo-grpc-talk-linux-server
+          asset_label: Linux binary
+          asset_content_type: application/binary
+      
+      - name: Attach Linux binary client to GitHub release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ github.workspace }}/todo-grpc-talk-linux/todo-grpc-talk-client
+          asset_name: todo-grpc-talk-linux-client
+          asset_label: Linux binary
+          asset_content_type: application/binary

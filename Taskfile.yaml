@@ -7,12 +7,19 @@ tasks:
     cmds:
       - protoc --experimental_allow_proto3_optional --plugin=$(which protoc-gen-go) --plugin=$(which gen-go-grpc) --proto_path=protobuf --go_out internal --go_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_out internal protobuf/*.proto
   
-  build-todo-grpc-talk:
-    desc: "Build todo-grpc-talk binary for release"
+  build-todo-grpc-talk-server:
+    desc: "Build todo-grpc-talk-server binary for release"
     deps:
       - task: template/go-build-binary
         vars:
-          CMD_NAME: "todo-grpc-talk"
+          CMD_NAME: "todo-grpc-talk-server"
+
+  build-todo-grpc-talk-client:
+    desc: "Build todo-grpc-talk-client binary for release"
+    deps:
+      - task: template/go-build-binary
+        vars:
+          CMD_NAME: "todo-grpc-talk-client"
 
   start-grpcui:
     desc: "Start GRPCUI"
