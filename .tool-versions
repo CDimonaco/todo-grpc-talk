@@ -5,3 +5,4 @@ protoc-gen-go 1.28.1
 protolint 0.42.2
 protoc-gen-go-grpc 1.2.0mockery 2.15.0
 mockery 2.15.0
+golangci-lint 1.50.1
