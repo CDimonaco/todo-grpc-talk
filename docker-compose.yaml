@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  grpcui:
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    image: fullstorydev/grpcui:v1.3.1
+    ports:
+      - "8081:8080"
+    command: "-plaintext host.docker.internal:${LOCAL_HOST_PORT:-9090}"

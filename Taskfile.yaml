@@ -6,6 +6,7 @@ tasks:
     desc: "Build protobuf and grpc stubs from proto definition files"
     cmds:
       - protoc --experimental_allow_proto3_optional --plugin=$(which protoc-gen-go) --plugin=$(which gen-go-grpc) --proto_path=protobuf --go_out internal --go_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_out internal protobuf/*.proto
+  
   build-todo-grpc-talk:
     desc: "Build todo-grpc-talk binary for release"
     deps:
@@ -13,12 +14,23 @@ tasks:
         vars:
           CMD_NAME: "todo-grpc-talk"
 
+  start-grpcui:
+    desc: "Start GRPCUI"
+    deps:
+      - task: template/start-grpcui
+        vars:
+          LOCAL_HOST_PORT: 9090
+
   lint:
     desc: "lint the project"
     cmds:
       - golangci-lint -v run
 
   # templates
+  template/start-grpcui:
+    cmds:
+      - LOCAL_HOST_PORT="{{ .LOCAL_HOST_PORT }}" docker-compose up grpcui
+
   template/go-build-binary:
     env:
       CGO_ENABLED: 0
