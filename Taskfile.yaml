@@ -5,7 +5,7 @@ tasks:
   build-proto-stubs:
     desc: "Build protobuf and grpc stubs from proto definition files"
     cmds:
-      - protoc --experimental_allow_proto3_optional --plugin=$(which protoc-gen-go) --plugin=$(which gen-go-grpc) --proto_path=protobuf --go_out internal --go_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_out internal protobuf/*.proto
+      - protoc --experimental_allow_proto3_optional --plugin=$(which protoc-gen-go) --plugin=$(which protoc-gen-go-grpc) --proto_path=protobuf --go_out internal --go_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_opt=module="github.com/CDimonaco/todo-grpc-talk/internal" --go-grpc_out internal protobuf/*.proto
   
   build-todo-grpc-talk-server:
     desc: "Build todo-grpc-talk-server binary for release"
